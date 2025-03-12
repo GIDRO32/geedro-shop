@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Store Product Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/Css/product.css">
+    <script>
+function addToCart() {
+            const productImageSrc = document.querySelector('.product-image img').src;
+            const productName = document.querySelector('.product-title').textContent;
+            const productPrice = document.querySelector('.product-price').textContent;
+            const productCount = parseInt(document.querySelector('#product-count').value);
+            const productTag = document.querySelector('.product-title').textContent; // Assuming tag is the product name
+
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const productTotalPrice = parseFloat(productPrice.replace('$', '')) * productCount;
+
+            // Check if product with the same tag already exists in cart
+            const existingProductIndex = cartItems.findIndex(item => item.tag === productTag);
+
+            if (existingProductIndex !== -1) {
+                // Update the existing product count and total price
+                cartItems[existingProductIndex].count += productCount;
+                cartItems[existingProductIndex].totalPrice += productTotalPrice;
+            } else {
+                // Add new product to cart
+                const newItem = {
+                    image: productImageSrc,
+                    name: productName,
+                    count: productCount,
+                    totalPrice: productTotalPrice,
+                    tag: productTag
+                };
+                cartItems.push(newItem);
+            }
+            
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+
+            const popup = document.createElement('div');
+            popup.classList.add('popup');
+            popup.innerHTML = `
+                
+                <div class="popup-content">
+                  <p style="margin-bottom: 15px; padding: 10px; border-radius: 15px; font-weight: bold; color: #4caf50; background-color: black;">Product added to cart</p>
+                    <span class="close-btn" onclick="closePopup()">&times;</span>
+                    <img src="${productImageSrc}" alt="Product Image" class="popup-image">
+                    <h2>${productName}</h2>
+                    <p>Count: ${productCount}</p>
+                    <p>Total Price: $${(parseFloat(productPrice.replace('$', '')) * productCount).toFixed(2)}</p>
+                    <a href="cart.html" class="view-cart-btn" style="margin-top: 10px; display: inline-block; font-size: 30px">View Cart</a>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
+      function closePopup() {
+          const popup = document.querySelector('.popup');
+          if (popup) {
+              document.body.removeChild(popup);
+          }
+      }
+  </script>
+</head>
+<body onload="calculateAverageRating()">
+        <!-- Start Header -->
+        <div class="header">
+            <div class="container">
+              <a href="./index.html" class="logo">Lebogax Store</a>
+              <div class="nav">
+                <!-- JS add Class: show -->
+                <ul class="nav-links" id="nav-links">
+                  <!-- JS add Class: active -->
+                  <li><a href="./index.html">Home</a></li>
+                  <li><a href="./shop.html">Shop</a></li>
+                  <li><a href="./about.html">About</a></li>
+                  <li><a href="./contact.html">Contact</a></li>
+                </ul>
+                <div class="icon" id="toggle">
+                  <i class="fa-solid fa-bars"></i>
+                </div>
+                <div class="cart" id="cart">
+                  <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End Header -->
+    <div class="container">
+        <div class="product-page">
+            <div class="product-image">
+                <img src="./assets/images/products/f1.jpg" alt="Product Image">
+            </div>
+            <div class="product-details">
+              <h1 class="product-title">300 gems pack</h1>
+              <p class="product-price">$12.49</p>
+              <p class="product-description">The pack of in-game currency which you can spend on:</p>
+              <p class="product-description">Boosters</p>
+              <p class="product-description">Reducing energy restore time</p>
+              <p class="product-description">Exclusive items in gem shop</p>
+              <label for="product-count">Quantity:</label>
+              <input type="number" id="product-count" name="product-count" min="1" value="1">
+              <br><br>
+              <button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+                <div class="star-rating">
+                    <span class="star">&#9733;</span>
+                    <span class="star">&#9733;</span>
+                    <span class="star">&#9734;</span>
+                    <span class="star">&#9734;</span>
+                    <span class="star">&#9734;</span>
+                    <p>(2.0 / 5.0)</p>
+                </div>
+            </div>
+        </div>
+        <div class="customer-feedback">
+            <h2 class="feedback-title">Customer Feedback</h2>
+            <div class="feedback-item">
+                <h3>John Doe</h3>
+                <div class="star-rating">
+                    <span class="star star-filled">&#9733;</span>
+                    <span class="star star-filled">&#9733;</span>
+                    <span class="star">&#9734;</span>
+                    <span class="star">&#9734;</span>
+                    <span class="star">&#9734;</span>
+                </div>
+                <p>I think that gems are overestimated nowadays.</p>
+            </div>
+            <form class="feedback-form" onsubmit="addFeedback(event)">
+                <h3>Leave Your Feedback</h3>
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required><br><br>
+                <label for="feedback">Your Feedback:</label><br>
+                <textarea id="feedback" name="feedback" rows="4" required></textarea><br><br>
+                <label for="stars">Star Rating (1-5):</label>
+                <input type="number" id="stars" name="stars" min="1" max="5" required><br><br>
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+    <!-- Start Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="contact">
+          <a href="" class="logo">Lebogax Store</a>
+          <div class="info">
+            <h4>Contact</h4>
+            <p><span>Email:</span> pambossable@gmail.com</p>
+            <p><span>Phone:</span> +380992612273</p>
+          </div>
+          <div class="follow">
+            <i class="fa-brands fa-facebook-f"></i>
+            <i class="fa-brands fa-instagram"></i>
+            <a href="https://www.youtube.com/@GEEDRO_Official_975" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="box">
+          <h4>About</h4>
+          <ul class="menu">
+            <li><a href="./about.html">About Us</a></li>
+            <li><a href="">Privacy Policy</a></li>
+            <li><a href="">Terms & Conditions</a></li>
+            <li><a href="./contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h4>My Account</h4>
+          <ul>
+            <li><a href="">Sign In</a></li>
+            <li><a href="./cart.html">View cart</a></li>
+            <li><a href="">Help</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="dev">
+        &copy; 2024 Lebogax. All rights reserved.
+      </p>
+      <p class="dev">
+        &copy; 2014 GEEDRO Game Developments. All rights reserved.
+      </p>
+    </div>
+    <!-- End footer -->
+</body>
+</html>
